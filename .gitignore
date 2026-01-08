@@ -1,4 +1,64 @@
-__pycache_/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 *.pyc
-*.db
+*.pyo
+*.pyd
+.Python
+env/
 venv/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+ENV/
+env/
+venv/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Build/dist
+build/
+dist/
+*.dist-info/
+
+# Environment variables
+.env
+.env.local
+secrets.py
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large files or data
+data/
+*.csv
+*.json
+*.xlsx
+*.zip
+
+# Django specific
+local_settings.py
+db.sqlite3-journal
+media/                  # User-uploaded files (never commit these)
+*.pot                   # Translation files (if not managing them)
+.coverage               # If running tests with coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
