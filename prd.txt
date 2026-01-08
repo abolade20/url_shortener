@@ -1,0 +1,224 @@
+Product Requirements Document (PRD)
+Project: URL Shortener Web Application
+1. Overview
+1.1 Product Summary
+
+The URL Shortener is a web-based application that allows users to shorten long URLs, manage their links through an interactive dashboard, generate QR codes for quick access, and securely maintain personalized link data via user authentication.
+
+The platform aims to provide a fast, intuitive, and secure way for individuals and businesses to manage and track their URLs.
+
+1.2 Objectives
+
+Enable users to create short, shareable links.
+
+Provide an analytics dashboard for users to track link performance.
+
+Ensure secure access and personalized data through user authentication.
+
+Generate QR codes for shortened links to enhance accessibility.
+
+Deliver a clean and user-friendly experience.
+
+2. Key Features
+2.1 User Authentication
+
+Description: Users must create an account or log in to access personalized dashboards and link management.
+Requirements:
+
+User registration (email, username, password).
+
+Login functionality with session management (JWT or Flask Login).
+
+Password hashing & secure storage.
+
+Forgot password (optional for later versions).
+
+Logout functionality.
+
+2.2 Dashboard
+
+Description: A personalized dashboard where authenticated users view and manage their shortened URLs.
+Requirements:
+
+Display list of user’s URLs (short link, original link, date created).
+
+Display link performance:
+
+Click count
+
+Device type (optional future feature)
+
+Location analytics (optional future feature)
+
+Quick actions: Edit link, delete link, copy short link.
+
+Sorting and searching functionality.
+
+Overview statistics widget:
+
+Total links created
+
+Total clicks
+
+Most clicked link
+
+Last created link
+
+2.3 URL Shortening
+
+Description: Core feature that converts a long URL into a short, unique, and shareable link.
+Requirements:
+
+Input form to submit long URLs.
+
+Backend service to generate short unique identifiers (e.g., base62, hash).
+
+Custom alias option (optional).
+
+Prevent duplicate entries (same URL should map to same short link or create different link depending on settings).
+
+Redirect logic from short URL → original URL.
+
+Validate URLs to ensure correctness.
+
+2.4 QR Code Generation
+
+Description: Automatically generate QR codes for shortened URLs.
+Requirements:
+
+Generate QR code image upon URL creation.
+
+Display QR code on link details page or dashboard.
+
+Allow download of QR code in PNG/JPG format.
+
+3. User Roles
+3.1 Guest User
+
+Can access homepage/landing page
+
+Can try limited link shortening (optional)
+
+Cannot access dashboard
+
+3.2 Authenticated User
+
+Full access to dashboard
+
+Can shorten URLs
+
+Can view analytics
+
+Can generate and download QR codes
+
+Can manage account
+
+4. User Flow
+Flow 1: Registration & Login
+
+User lands on homepage
+
+Chooses "Sign Up"
+
+Creates account → redirected to dashboard
+
+OR logs in through login form
+
+Flow 2: Creating a Short URL
+
+User logs in
+
+On dashboard → clicks “New URL”
+
+User pastes long URL
+
+System generates short link
+
+QR code is generated automatically
+
+Short link & QR appear in dashboard
+
+Flow 3: Viewing Analytics
+
+User opens dashboard
+
+Selects a specific link
+
+Sees: clicks, created date, URL, QR code, etc.
+
+Flow 4: Redirection
+
+Visitor clicks the short link
+
+System logs click
+
+Visitor is redirected to original link
+
+5. Technical Requirements
+5.1 Frontend
+
+HTML/CSS/JS OR React (if building SPA)
+
+Responsive design
+
+Copy-to-clipboard integration
+
+Charts library for analytics (Chart.js optional)
+
+5.2 Backend
+
+Options depending on your stack:
+
+Flask / Django / Node.js / FastAPI
+Core backend responsibilities:
+
+Authentication
+
+URL shortening logic
+
+QR code generation
+
+Analytics tracking
+
+Database CRUD operations
+
+5.3 Database
+
+Users table
+
+URLs table (original URL, short code, user_id, created_at)
+
+Analytics table: (url_id, timestamp, device info, IP, etc. — optional)
+
+5.4 Third-Party Tools
+
+QR code library (e.g., qrcode for Python)
+
+Short ID generator
+
+Email service (optional for password reset)
+
+6. Non-Functional Requirements
+6.1 Performance
+
+Redirection must be fast (<150ms).
+
+Dashboard loads under 2 sec.
+
+6.2 Security
+
+Password hashing (bcrypt recommended).
+
+Prevent XSS, CSRF, URL injection.
+
+Token-based sessions or Flask-Login.
+
+6.3 Scalability
+
+Short codes stored efficiently for fast lookup.
+
+Database indexing on short code & user_id.
+
+6.4 Reliability
+
+System must handle high traffic for redirection.

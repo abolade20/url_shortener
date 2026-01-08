@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - URL Shortener{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>My Links</h2>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>{{ total_urls }}</h3>
+            <p>Total URLs</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_clicks }}</h3>
+            <p>Total Clicks</p>
+        </div>
+        {% if most_clicked %}
+        <div class="stat-card">
+            <h3>{{ most_clicked.click_count }}</h3>
+            <p>Most Clicked</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <form method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search by URL or short code..." value="{{ query }}" class="search-input">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+    </div>
+
+    <!-- URLs Table -->
+    {% if urls %}
+        <div class="urls-table-container">
+            <table class="urls-table">
+                <thead>
+                    <tr>
+                        <th>Short Link</th>
+                        <th>Original URL</th>
+                        <th>Created</th>
+                        <th>Clicks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for url in urls %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('main.redirect_short', short_code=url.short_url) }}" target="_blank">
+                                {{ request.host_url }}r/{{ url.short_url }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url.original_url }}" target="_blank" title="{{ url.original_url }}">
+                                {{ url.original_url[:50] }}{% if url.original_url|length > 50 %}...{% endif %}
+                            </a>
+                        </td>
+                        <td>{{ url.date_created.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ url.click_count }}</td>
+                        <td>
+                            <a href="{{ url_for('main.url_detail', url_id=url.id) }}" class="btn btn-small">View</a>
+                            <form method="POST" action="{{ url_for('main.delete_url', url_id=url.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Delete this URL?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No URLs yet. <a href="{{ url_for('main.create_url') }}">Create your first short URL</a></p>
+        </div>
+    {% endif %}
+
+    <div class="action-buttons">
+        <a href="{{ url_for('main.create_url') }}" class="btn btn-primary">+ Create New URL</a>
+    </div>
+</div>
+{% endblock %}

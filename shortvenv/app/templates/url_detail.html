@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ url.short_url }} - URL Shortener{% endblock %}
+
+{% block content %}
+<div class="url-detail">
+    <h2>URL Details</h2>
+
+    <div class="detail-card">
+        <h3>Short Link</h3>
+        <input type="text" readonly value="{{ request.host_url }}r/{{ url.short_url }}" class="form-control">
+        <small>Select and press Ctrl+C to copy</small>
+    </div>
+
+    <div class="detail-card">
+        <h3>Original URL</h3>
+        <a href="{{ url.original_url }}" target="_blank">{{ url.original_url }}</a>
+    </div>
+
+    <div class="detail-card">
+        <h3>Statistics</h3>
+        <p><strong>Total Clicks:</strong> {{ url.click_count }}</p>
+        <p><strong>Created:</strong> {{ url.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    </div>
+
+    <!-- QR Code -->
+    <div class="detail-card">
+        <h3>QR Code</h3>
+        {% if url.qr_filename %}
+            <div class="qr-container">
+                <img src="{{ url_for('static', filename='qrcodes/' + url.qr_filename) }}" alt="QR Code" class="qr-image">
+            </div>
+            <a href="{{ url_for('main.download_qr', url_id=url.id) }}" class="btn btn-secondary">📥 Download QR Code</a>
+        {% else %}
+            <p>QR code not available</p>
+        {% endif %}
+    </div>
+
+    <!-- Click History -->
+    <div class="detail-card">
+        <h3>Recent Clicks (Last 10)</h3>
+        {% if clicks %}
+            <table class="clicks-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>IP Address</th>
+                        <th>User Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for click in clicks[:10] %}
+                    <tr>
+                        <td>{{ click.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ click.ip_address }}</td>
+                        <td>{{ click.user_agent[:50] }}{% if click.user_agent|length > 50 %}...{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No clicks yet</p>
+        {% endif %}
+    </div>
+
+    <!-- Actions -->
+    <div class="action-buttons">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+        <form method="POST" action="{{ url_for('main.delete_url', url_id=url.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this URL?')">🗑️ Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
